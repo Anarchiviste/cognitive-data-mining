@@ -1,8 +1,8 @@
 # PSL Week : Cognitive data mining and modelling
 ## Data
-- CSV for the exercices in the notebooks and Endproject folders
+- CSV for the exercices in the notebooks and Endproject folders.
 ## Notebooks
-- Contain all exercices and corrections
+- Contain all exercices and corrections.
 ## Papers
 - Contain papers about data science and cognitive modelling.
 ## Endproject
