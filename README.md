@@ -4,6 +4,6 @@
 ## Notebooks
 - Contain all exercices and corrections.
 ## Papers
-- Contain papers about data science and cognitive modelling.
+- Contain presentations about data science and cognitive modelling.
 ## Endproject
 - Contain the notebooks used to pass the class.
