@@ -1,0 +1,26 @@
+Name;Description
+Biacromial;Biacromial diameter
+Biiliac;"Biiliac diameter, or ""pelvic breadth"""
+Bitrochanteric;Bitrochanteric diameter
+Chest_depth;Chest depth between spine and sternum at nipple level, mid-expiration
+Chest_diam ;Chest diameter at nipple level, mid-expiration
+Elbow_diam;Elbow diameter, sum of two elbows
+Wrist_diam;Wrist diameter, sum of two wrists
+Knee_diam;Knee diameter, sum of two knees
+Ankle_dian;Ankle diameter, sum of two ankles
+Shoulder_diam;Shoulder girth over deltoid muscles
+Chest_girth;Chest girth, nipple line in males and just above breast tissue in females, mid-expiration
+Waist_girth;Waist girth, narrowest part of torso below the rib cage, average of contracted and relaxed position
+Navel_girth;"Navel (or ""Abdominal"") girth at umbilicus and iliac crest, iliac crest as a landmark"
+Hip_girth;Hip girth at level of bitrochanteric diameter
+Thigh_girth ;Thigh girth below gluteal fold, average of right and left girths
+Bicep_girth;Bicep girth, flexed, average of right and left girths
+Forearm_girth;Forearm girth, extended, palm up, average of right and left girths
+Knee_girth;Knee girth over patella, slightly flexed position, average of right and left girths
+Calf_maxgirth;Calf maximum girth, average of right and left girths
+Ankle_mingirth;Ankle minimum girth, average of right and left girths
+Wrist_mingirth;Wrist minimum girth, average of right and left girths
+Age;Age (years)
+Weight;Weight (kg)
+Height;Height (cm)
+Sex;Biological sex (1 - male, 0 - female)

@@ -1,0 +1,1013 @@
+<HTML>
+<HEAD>
+<TITLE>Journal of Statistics Education, V11N2: Heinz</TITLE>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="../client/annotations.css?1706875529"></HEAD>
+
+
+<BODY bgcolor="white" link="blue" vlink="blue" alink="blue">
+  <div id="wikiwix_overlay_button"></div>
+  <div id="popup_notice"></div>
+  <div id="wikiwix_container" class="wikiwix_embeded_page">
+    <div id="wikiwix_minimizer"></div>
+    <div id="wikiwix_login_container"></div>
+    <div id="wikiwix_overlay_container"></div>
+    <div id="wikiwix_annotation_container" class="wikiwix_annotation_container"></div>
+</div>
+
+<script>'use strict';</script>
+
+<script src="../client/react.production.min.js"></script>
+<script src="../client/react-dom.production.min.js"></script>
+<script src="../client/jquery-3.6.0.min.js"></script>
+<script src="../client/include/l10n.js.php?charset=&1706875529"></script>
+<script src="../client/include/apiConnector.js?1706875529"></script>
+<script src="../client/include/overlayStack.js?1706875529"></script>
+<script src="../client/include/domSelector.js?1706875529"></script>
+<script src="../client/include/domSelectorElement.js?1706875529"></script>
+<script src="../client/component/popupNotice.js?1706875529"></script>
+<script src="../client/component/socialMediaBar.js?1706875529"></script>
+<script src="../client/component/adminTools.js?1706875529"></script>
+<script src="../client/component/loginContainer.js?1706875529"></script>
+<script src="../client/component/registerContainer.js?1706875529"></script>
+<script src="../client/component/annotationContainer.js?1706875529"></script>
+<script src="../client/component/annotationEntry.js?1706875529"></script>
+<script src="../client/component/annotationSpecial.js?1706875529"></script>
+<script src="../client/component/annotationWriter.js?1706875529"></script>
+<script src="../client/component/userAnnotations.js?1706875529"></script>
+<script src="../client/component/createFederation.js?1706875529"></script>
+<script src="../client/component/overlayContainer.js?1706875529"></script>
+<script src="../client/component/autocomplete.js?1706875529"></script>
+<script src="../client/component/minimizer.js?1706875529"></script>
+<script src="../client/component/infoBox.js?1706875529"></script>
+<script src="../client/component/filterBox.js?1706875529"></script>
+<script src="../client/component/pdfButton.js?1706875529"></script>
+<script src="../client/component/anchorPopup.js?1706875529"></script>
+<script src="../client/component/userPreferences.js?1706875529"></script>
+<script src="../client/component/contactOptions.js?1706875529"></script>
+<script src="../client/component/yourAccount.js?1706875529"></script>
+<script src="../client/component/login.js?1706875529"></script>
+<script src="../client/component/register.js?1706875529"></script>
+<script src="../client/component/lostPassword.js?1706875529"></script>
+<script src="../client/component/pickNewPassword.js?1706875529"></script>
+<script src="../client/component/controlledInput.js?1706875529"></script>
+<script src="../client/component/anonNotice.js?1706875529"></script>
+<script src="../client/component/tabBar.js?1706875529"></script>
+<script src="../client/component/paypalButton.js?1706875529"></script>
+<script src="../client/component/urlEntry.js?1706875529"></script>
+<script src="../client/component/privateFederationNotice.js?1706875529"></script>
+<script src="../client/component/federationContainer.js?1706875529"></script>
+<script src="../client/component/annotationCarroussel.js?1706875529"></script>
+<script src="../client/component/federationRequests.js?1706875529"></script>
+<script src="../client/component/federationRequest.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxCount.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxUrls.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxUrlList.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxItemUrl.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxMemberCount.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxMemberList.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxItemMember.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationBoxDescription.js?1706875529"></script>
+<script src="../client/component/federationBoxes/federationOwnerTools.js?1706875529"></script>
+<script src="../client/conf.js?1706875529"></script>
+
+<script>
+const e = React.createElement;
+
+const lang = new l10n()
+
+const urlParams = new URLSearchParams(window.location.search);
+const url = 'http://www.amstat.org/publications/jse/v11n2/datasets.heinz.html';
+
+let recoverKey = false
+let recoverUser = false
+let focusAnnotation = false
+let changeFederation = false
+
+// Parse url hash
+for(let param of window.location.hash.matchAll(/[#&]([_a-z]+)(?:=([^&]*))?/ig)) {
+  let name = param[1]
+  let value = param[2]
+  if ( param[2] === undefined ) value = true // absence of =value means opt-on
+
+  switch ( name ) {
+    case 'recover':
+      recoverKey = value
+      break;
+    case 'ruser':
+      recoverUser = value;
+      break;
+    case 'focus_annotation':
+      focusAnnotation = value;
+      break;
+    case 'federation':
+      changeFederation = decodeURIComponent(value);
+      break;
+  }
+}
+
+// don't reparse later parameters, except federation which is a page state
+var clearedHash =
+  (changeFederation?'federation='+encodeURIComponent(changeFederation)+'&':'&') +
+  (focusAnnotation?'focus_annotation='+focusAnnotation+'&':'&')
+window.location.hash = clearedHash ? clearedHash.substr(0,clearedHash.length-1) : ''
+
+const api = new ApiConnector( cache_url, search_url, api_url, annotation_api_url, client_url, trinet_url, lang, recoverKey, recoverUser );
+
+const infoForInfobox = {
+    timestamp:1298468836,
+    url:'http://www.amstat.org/publications/jse/v11n2/datasets.heinz.html',
+    status:200,
+    timestamps:[1298468836]  }
+
+const container = $(document.querySelector('#wikiwix_container'))
+
+api.handlerOnCommand( (cmd)=>{
+  if ( cmd.hasOwnProperty('minimize') ) {
+    if ( cmd.minimize ) {
+      container.addClass('minimized')
+    } else {
+      container.removeClass('minimized')
+    }
+  }
+  if ( cmd.hasOwnProperty('showError') ) {
+    alert(cmd.showError)
+  }
+})
+
+const overlayButton = e(
+  PdfButton,
+  { api:api,
+    pageUrl:url 
+  }
+);
+ReactDOM.render(overlayButton, document.querySelector('#wikiwix_overlay_button'));
+
+const popupNotice = e(
+  PopupNotice,
+  { api:api,
+    pageUrl:url
+  }
+);
+ReactDOM.render(popupNotice, document.querySelector('#popup_notice'));
+
+const minimizer = e(
+  Minimizer,
+  { api:api }
+);
+ReactDOM.render(minimizer, document.querySelector('#wikiwix_minimizer'));
+
+const annotationContainer = e(
+  AnnotationContainer,
+  { api:api,
+    pageUrl:url,
+    federationName:'archive.wikiwix.com', // default federation
+    forceFederation:changeFederation, // If not false, use this federation
+    focusAnnotation:focusAnnotation,
+    overallContainer:container[0],
+    infoForInfobox:infoForInfobox,
+    domain:url
+  }
+);
+ReactDOM.render(annotationContainer, document.querySelector('#wikiwix_annotation_container'));
+
+const overlayContainer = e(
+  OverlayContainer,
+  { api:api,
+    previous:api.annotationContainer
+  }
+);
+ReactDOM.render(overlayContainer, document.querySelector('#wikiwix_overlay_container'));
+
+const loginContainer = e(
+  LoginContainer,
+  {api:api}
+);
+ReactDOM.render(loginContainer, document.querySelector('#wikiwix_login_container'));
+
+var all_a = document.getElementsByTagName("A")
+for(var i =0;i < all_a.length; i++) {
+
+var a = all_a[i]
+    a.addEventListener('contextmenu', function(e) {
+        var e = e || window.event;
+        var caller = e.target || e.srcElement
+        var href = caller.getAttribute('href')
+        while ( !href && caller.parentNode ) {
+            caller = caller.parentNode
+            href = caller.getAttribute('href')
+        }
+            if ( !caller.className.match(/\bnorightclick\b/) ) {
+            window.open('?url=' + href, 'Web Archiver '+Math.random(999999)); 
+        }
+    }, false )
+}
+
+window.onload = function() {
+  var maxZ = Math.max.apply(null, 
+      $.map($('body *'), function(e,n) {
+        if ( $(e).css('position') == 'static' ) return 0;
+        let number = $(e).css('z-index')||''
+        if ( number ) {
+          number = number.match(/[0-9]+/)
+        }
+        return number ? parseInt(number,10) : 0
+    }));
+    console.log('Max Z = '+maxZ)
+  $('#wikiwix_container').css('z-index',maxZ+1)
+  $('#wikiwix_login_container').css('z-index',maxZ+2)
+  $('#wikiwix_minimizer').css('z-index',maxZ+3)
+  $('#popup_notice').css('z-index',maxZ+1)
+
+}
+
+
+
+</script>
+
+<table width="100%">
+<tr>
+<td align="right" valign="top">
+<a href="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse"><font color="blue">
+<img src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_logo_2001_still.gif" border="0"></font></a>
+</td>
+</tr>
+</table>
+
+
+<h1>Exploring Relationships in Body Dimensions</h1>
+<p>
+Grete Heinz
+<P>
+Louis J. Peterson
+<BR>San José State University
+<P>
+Roger W. Johnson
+<BR>South Dakota School of Mines and Technology
+<P>
+Carter J. Kerk
+<BR>South Dakota School of Mines and Technology
+</p>
+
+<P>
+<cite>Journal of Statistics Education</cite> Volume 11, Number 2 (2003), www.amstat.org/publications/jse/v11n2/datasets.heinz.html</p>
+
+<p>Copyright &copy; 2003 by Grete Heinz, Louis J. Peterson, Roger W. Johnson, and Carter J. Kerk, all rights reserved.  
+This text may be freely shared among individuals, but it
+may not be republished in any medium without express
+written consent from the authors and advance notification
+of the editor.</p> 
+
+<p><HR></p>
+
+<P><STRONG>Key Words:</STRONG> Anthropometry; Discriminant analysis; Ergonomics; Forensic science; Multiple regression.
+
+<h2>Abstract</h2>
+
+<P>
+Body girth measurements and skeletal diameter measurements, as well as age, weight, height and gender, are given for 507 physically active 
+individuals - 247 men and 260 women. These data can be used to provide statistics students practice in the art of data analysis. Such analyses range from simple descriptive displays to more complicated multivariate analyses such as multiple regression and discriminant analysis.
+</P>
+
+<H2>1. Introduction</H2>
+
+<P>
+To give students practice in the art of data analysis, the projects presented here use the research of the first two authors (referred to below as the HP Study), which investigated the correspondence between body build, weight, and girths in a group of physically active young men and women, most of whom were within normal weight range. Skeletal width and depth measurements of the trunk and limbs at nine well-defined body sites were used to characterize body build. The hypothesis that body build (skeletal) variables and height predict scale weight substantially better than height alone was affirmed for the group. A weight equation for the group in terms of body build variables and height was found using regression. Each person’s over/underweight could be calculated from the difference between weight as determined by the scale - "scale weight" - and weight projected from the group’s weight equation - "body build weight."
+</P>
+
+<P>
+Trunk and limb girths were measured at twelve well-defined sites. Again, regression analysis was used to determine the best prediction equations for the measured girths from selected body build variables. Body build girths were then projected from these girth equations. Once again the difference between measured girths at specific girths sites and the corresponding body build girths could be taken - this allowed an estimate of individual fatness and muscularity 
+above or below the group average.
+</P>
+
+<P>
+The HP Study dataset gives students an opportunity to explore anthropometric, forensic, and ergonomic topics using a variety of data analysis techniques. Descriptions of the measurements and some suggested analyses are provided in this article.
+</P>
+
+<H2>2. Data Sources</H2>
+
+<P>
+The first two authors and technicians trained by them took measurements on the 247 men and 260 women in the dataset associated with this article. These were primarily individuals in their twenties and early thirties, with a scattering of older men and women, all physically active (several hours of exercise a week). The initial measurements were taken at San Jose State University and at the U.S. Naval Postgraduate School in Monterey, California, primarily by the first two authors. Additional measurements were performed by technicians in dozens of California health and fitness clubs. Every effort was made to assure consistency in these different settings by having one of the authors (G.H.) monitor the technicians’ measurement techniques.
+</P>
+
+<P>
+We caution the reader that the dataset does not constitute a random sample from a well-defined population. While we feel that the dataset can be used to illustrate a number of inferential techniques in statistics, such inference is technically invalid here as the sample is not a representative sample from a well-defined population.
+</P>
+
+<H2>3. Description of the Data</H2>
+
+<P>
+Nine <I>skeletal measurements</I> (diameter measurements) were included in the study. A broad-blade anthropometer (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure1">Figure 1</A>) was used to measure the biacromial, biiliac, bitrochanteric (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure2">Figure 2</A>), and chest diameters along the trunk and a smaller version of this anthropometer was used for the four skeletal measurements along the limbs - the elbow, wrist, knee, and ankle diameters. For the chest depth measurement, the depth attachment of the anthropometer was activated (shown with dashes in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure1">Figure 1</A>). Firm pressure was applied at each bodily site to compress the flesh and obtain "bone to bone" measurements. All the sites prescribed by A.R. Behnke for a complete assessment of frame size are included in the study and follow his suggested measurement techniques (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23behnke1974">Behnke and Wilmore 1974</A>, pp. 39-41). The chest depth measurement was added by the authors (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23lohman1988">Lohman, Roche, and Martorell 1988</A>, p. 30, for a description of this site). It should be kept in mind that at the time of physical maturation, the nine skeletal sites, like height, have generally attained their maximum size.
+</P>
+
+<P>
+Regarding skeletal measurements, 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23behnke1974">Behnke and Wilmore (1974, p. 39)</A>, note:
+</P>
+
+<BLOCKQUOTE>
+<P>
+The diameters of the body can be measured rather accurately and with a high degree of reliability because of the nature of the measurement. In almost all instances, the measurements are made with a bone-to-bone contact, i.e., the soft tissue is compressed
+<NOBR>... .</NOBR> It is important to use the fingers of both hands to locate the precise bony landmarks, placing the blade of the anthropometer immediately over the identified landmark.
+</P>
+</BLOCKQUOTE>
+
+<P>
+Twelve <I>girth</I> (or <I>circumference</I>) <I>measurements</I> are used in the study. They, in contrast to skeletal (diameter) measurements, are not fixed over time except for the three "bony" girths of the wrist, knee, and ankle, which remain relatively constant over the life span. The other nine girths, the changeable ones, were measured at these sites: shoulder, chest, waist, navel, hip, thigh, bicep, forearm, and calf. A plastic tape was used with uniform compression and horizontally, as prescribed by 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23behnke1974">Behnke and Wilmore (1974, pp. 45-47)</A>.
+</P>
+
+<A NAME="figure1">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure1.jpg"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure1.jpg"> Figure 1</A>
+</P>
+
+<P>
+<B>Figure 1.</B> Sliding Anthropometer with Depth Attachment.
+</P>
+
+<P><HR></P>
+
+<P>
+Further comments on the accuracy of skeletal and girth measurements may be found in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23lohman1988">Lohman et al. (1988, Chap. 3 and 4)</A>. In addition to the skeletal and girth measurements, recorded in centimeters (cm), each subject had his or her age (years), weight (kg), height (cm), and gender recorded. A similar dataset for men, but without the skeletal measurements, was made available by 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23johnson1996">Johnson (1996)</A>.
+</P>
+
+<A NAME="figure2">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure2.jpg"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure2.jpg"> Figure 2</A>
+</P>
+
+<P>
+<B>Figure 2.</B> Biacromial, Biiliac, and Bitrochanteric Diameters.
+</P>
+
+<P><HR></P>
+
+<H2>4. Pedagogical Uses</H2>
+
+<A NAME="section41"></A>
+
+<H3>4.1 Descriptive Statistics - Numerical and Graphical</H3>
+
+<P>
+Initial exploration of the data by the students may involve calculation of the mean and the median and the standard deviation for each of the various body dimensions. In those cases where the dimensions differ substantially by gender, separate summary measures by gender are appropriate. 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure3">Figure 3</A>, for example, shows side-by-side boxplots of chest diameter by gender. From other studies it is known that men, on average, exceed women in all the variables in our dataset except the hip and thigh girths (see, for example  
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23nasa1978">National Aeronautics and Space Administration 1978</A>). For our particular dataset, women exceeded men on average only in the thigh girth variable. 
+</P>
+
+<A NAME="figure3">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure3.gif"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure3.gif"> Figure 3</A>
+</P>
+
+<P>
+<B>Figure 3.</B> Chest Diameter by Gender.
+</P>
+
+<P><HR></P>
+
+<P>
+Sometimes the coefficient of variation of a body dimension - the standard deviation of the body dimension divided by its mean (and sometimes then multiplied by 100) - is given as a unitless index of the inherent variability in that body dimension. Tables of coefficients of variation for various body dimensions are given, for example, in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23pheasant1996">Pheasant (1996, Table A3, p. 219)</A> and in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23kroemer1997">Kroemer, Kroemer, and Kroemer-Elbert (1997, Table 1-14, p. 44)</A>. Students may easily compute coefficients of variation for the body dimension measurements in the dataset provided and even compare them with those in the references above. Collections of military data on girths and selected skeletal measurements provide additional sources of comparison for young adults 
+(<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23white1971">White and Churchill 1971</A>;
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23clauser1972">Clauser et al. 1972</A>). 
+</P>
+
+<P>
+Knowing the distributions of various body dimensions is helpful in designing clothing 
+(commercial and military uniforms, for example), and furniture in the home and the work place (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23roebuck1995">Roebuck 1995</A>;
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23pheasant1996">Pheasant 1996</A>; 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23kroemer1997">Kroemer et al. 1997</A>). If we are designing furniture to accommodate the middle 90% of the population, for instance, having estimates of the 5th and 95th percentiles of various body dimensions would be appropriate. These percentiles can be estimated by using the corresponding sample percentiles of the relevant body dimensions or indirectly by first fitting densities to these body dimensions.
+</P>
+
+<P>
+The three classic anthropometric design principles are 
+<I>design for the average</I>, 
+<I>design for the range</I>, and 
+<I>design for the extremes</I>. In the case of design for the average, one adopts a "one size fits all" approach. Using this approach offers a reasonable fit for the majority near the middle of the distribution, but not for the rest of the range. It may be adequate for low-cost seating in classrooms or fast-food restaurants. Design for the range accommodates a larger percentage of the population 
+(such as 90%, 95%, or 99%) but generally at a greater cost. Adjustments can be made in automobiles for unusually large-bodied or tall or short individuals. The design for the extremes principle seeks to accommodate those hardest to fit when they are at one end of the distribution in some dimension. A designer of seatbelts would want to know the biggest waist measurements but could disregard the rest of the range. Likewise, the height of a doorway could be designed to accommodate the extreme right tail of height. The database used in the study, which includes data on weight, height, body diameters, and girths, lacks data on body segment lengths, which are needed for many ergonomic design questions, but this type of information is supplied in several collections of military data, for example, 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23white1971">White and Churchill (1971)</A> and
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23clauser1972">Clauser et al. (1972)</A>.
+</P>
+
+<P>
+Simple graphical displays such as stem-and-leaf diagrams and histograms reveal that the measurements recorded in the dataset are typically modeled well by a normal or by a gamma distribution. The histograms of biacromial diameter in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure4">Figure 4</A>, for example, appear normal for both men and women. Those students who have studied probability plots may also inspect such plots for linearity - the two normal probability plots corresponding to 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure4">Figure 4</A> each show a high degree of linearity. 
+</P>
+
+<P>
+Students who have studied some of the details involved in parameter estimation may be tasked to fit density curves to the distributions of various body dimensions. For data following a normal distribution, of course, the population mean and variance may be estimated by using the corresponding sample values. For data following a gamma distribution, such as waist girth for the women appearing in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure5">Figure 5</A>, the method of moments may be used to estimate the two parameters. (For greater realism, a shifted gamma may be used, as waist girth cannot be near zero.) Note that in a well-nourished group the lower limit of waist girth will not fall more than a few centimeters below what can be expected from body build, but the upper limit of waist girth is determined by fatness in addition to body build. Hence measurements strongly influenced by fatness will tend to be skewed to the right and may, as a consequence, be reasonably fit by a gamma.
+</P>
+
+<A NAME="figure4">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure4a.gif"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure4a.gif"> Figure 4a</A>
+</P>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure4b.gif"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure4b.gif"> Figure 4b</A>
+</P>
+
+<P>
+<B>Figure 4.</B> Examples of Approximately Normal Data.
+</P>
+
+<A NAME="figure5">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure5.gif"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure5.gif"> Figure 5</A>
+</P>
+
+<P>
+<B>Figure 5.</B> Example of a Gamma Distribution.
+</P>
+
+<P><HR></P>
+
+<P>
+Most pairs of body dimensions are roughly linearly related and, consequently, in such cases, the correlation coefficient may be used as a measure of the degree of the linear relationship. Here, students may give a table of correlation coefficients of (some subset of) the body dimensions with, say, correlations for women above the diagonal and correlations for men below the diagonal. Prior to calculating the correlation matrix, students can hypothesize about the potential strength of correlations among body dimensions and the signs of these correlations. Similar families of body dimensions would be expected to have strong correlation, for example, biiliac diameter with bitrochanteric diameter, and waist girth with navel girth, bicep girth and chest girth in men, and hip girth and thigh girth in women.
+</P>
+
+<P>
+One, albeit incomplete, measure of fitness is "body mass index" (BMI) which is simply weight divided by height squared - with weight measured in kilograms and height measured in meters. According to the National Institutes of Health 
+(<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz_link1.html">www.nih.gov</A>)
+</P>
+
+<BLOCKQUOTE>
+<P>
+In the majority of epidemiologic studies, mortality begins to increase with BMIs above 
+25 kg/m<SUP>2</SUP>. The increase in mortality generally tends to be modest until a BMI of 
+30 kg/m<SUP>2</SUP> is reached. For persons with a BMI of 
+30 kg/m<SUP>2</SUP> or above, mortality rates from all causes, and especially from cardiovascular disease, are generally increased by 50 to 100 percent above that of persons with BMIs in the range of 
+20 to 25 kg/m<SUP>2</SUP>. 
+</P>
+</BLOCKQUOTE>
+
+<P>
+Students may compute and examine the body mass index distribution for the individuals in the dataset relative to the 
+25 kg/m<SUP>2</SUP> and 30 kg/m<SUP>2</SUP> cutoffs mentioned above. They will note that 43% of the men, but only 17% of the women, have BMI greater than 25, in part because the men in the dataset are above average in muscularity. They can also, of course, compute their own BMI; if converting between English and Metric units, students may use 
+1 meter 
+<IMG SRC="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fimages%2Fapproximately.gif" ALT="equals approximately"> 39.37 inches and 
+1 kilogram 
+<IMG SRC="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fimages%2Fapproximately.gif" ALT="equals approximately"> 2.20 pounds. (See also 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23section43">Section 4.3</A> for possible limitations of BMI).
+</P>
+
+<H3>4.2 Discriminant Analysis/Classification Analysis </H3>
+
+<P>
+Forensic scientists can fairly accurately determine the gender of adults given their skeletal remains; apparently an accuracy rate of 90% or more is possible if the skeletal remains are complete (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23joyce1991">Joyce and Stover 1991</A> or 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23wingate1992">Wingate 1992</A>, for instance). Most useful to this determination of gender are the pelvis and the skull (see, for example, 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23nickell1999">Nickell and Fischer 1999</A>;
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23innes2000">Innes 2000</A>; 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23owen2000">Owen 2000</A>). As male and female skeletons show very little difference before puberty, gender determination from a child’s skeleton is extremely difficult.
+</P>
+
+<P>
+The skeletal measurements discussed above, as well as height - all of which were performed on living individuals - are virtually identical with measurements that would be taken on the skeletons of these individuals (recall, from the discussion above, measurements are made essentially with bone-to-bone contact, the soft tissues being compressed). Consequently, the 
+ten variables in our dataset that can be measured on a skeleton: biacromial diameter, biiliac diameter (or "pelvic breadth"), bitrochanteric diameter, chest depth, chest diameter, elbow diameter, wrist diameter, knee diameter, ankle diameter, and height can contribute to the forensic science classification problem of determining gender. The importance of the pelvis in gender determination suggests that we include biiliac diameter ("pelvic breadth") as a classifier variable, but this particular pelvic measurement proves to be ill-suited for the purpose. In fact, it is the skeletal variable in our dataset with the lowest predictive power for gender. 
+</P>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23lohman1988">Lohman et al. (1988)</A>, indicates that biacromial diameter is "useful ... in the evaluation of sex-associated differences in physique." This statement is confirmed by the histograms in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure4">Figure 4</A>, which show that there is little overlap between male and female biacromial diameter values. Using biacromial diameter as the only classifier variable, quadratic discriminant analysis with cross-validation correctly classified gender 89.3% of the time with the 507 cases in the dataset. A portion of the associated Minitab output appears below. 
+</P>
+
+<P>
+<PRE>
+Discriminant Analysis
+
+Quadratic Method for Response: Gender
+Predictors: Biacromial Diameter  
+
+Group        0        1
+Count      260      247
+
+
+Summary of Classification with Cross-validation
+
+Put into     ....True Group....
+Group            0        1
+0              235       29
+1               25      218
+Total N        260      247
+N Correct      235      218
+Proportion    0.904    0.883
+
+N =  507     N Correct =  453     Proportion Correct = 0.893
+
+
+From    Generalized Squared Distance to Group
+Group         0        1
+0           1.152    6.625
+1           8.244    1.472
+
+Variable   Pooled    Means for Group
+             Mean        0        1
+Biacromial 38.811   36.503   41.241
+
+
+Variable   Pooled    StDev for Group
+            StDev        0        1
+Biacromial  1.935    1.779    2.087
+</PRE>
+</P>
+
+<P>
+The discriminant analysis procedure above assumes that biacromial diameter for each gender follows some normal curve, as was verified in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23section41">Section 4.1</A> above. A quadratic discriminant analysis procedure was used to allow for possibly different variances in biacromial diameter for the two genders. For more details on discriminant analysis see, for example, 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23seber1984">Seber (1984)</A>.
+</P>
+
+<p>
+Some improvement in the correct classification percentage of 89.3% can be obtained by supplementing biacromial diameter with other variables from the list of 
+ten variables given previously. If we move away from a forensic science setting, students may be asked to classify gender by any of the variables in the dataset. 
+</P>
+
+<A NAME="section43"></A>
+<H3>4.3 Least-Squares/Multiple Regression</H3>
+<P>
+All is not lost if the batteries in your digital scale are dead! As scatterplots of weight against the various girth measurements and height all look quite linear it’s no surprise that weight can be predicted well by the various girth measurements and height. 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23behnke1974">Behnke and Wilmore (1974, p. 55)</A>, indicate that weight can be determined accurately from the square of the sum of various girth measurements multiplied by height. A better fit is achieved by modeling weight as linear combination of all of the girth measurements and height obtaining an adjusted 
+R<SUP>2</SUP> value of 97.3% and a standard error of 2.2 kg. A portion of the associated Minitab output appears below. 
+</P>
+
+<A NAME="equation1">
+<P>
+</A>
+<PRE>
+Regression Analysis
+
+The regression equation is
+
+Weight (kg) = - 120 + 0.0781 Shoulder Girth + 0.198 Chest Girth		   (1)
+           + 0.340 Waist Girth + 0.0012 Navel Girth
+           + 0.240 Hip Girth + 0.314 Thigh Girth + 0.0547 Flexed Bicep Girth
+           + 0.532 Forearm Girth + 0.301 Knee Girth + 0.404 Calf Maximum Girth
+           - 0.0096 Ankle Minimum Girth - 0.118 Wrist Minimum Girth
+           + 0.328 Height
+
+Predictor        Coef        StDev          T       P
+Constant     -120.214       2.489       -48.31    0.000
+Shoulder Girth  0.07813     0.02979       2.62    0.009
+Chest Girth     0.19785     0.03569       5.54    0.000
+Waist Girth     0.34042     0.02438      13.96    0.000
+Navel Girth     0.00117     0.02291       0.05    0.959
+Hip Girth       0.24040     0.04334       5.55    0.000
+Thigh Girth     0.31414     0.05148       6.10    0.000
+Flexed Bicep    0.05468     0.08526       0.64    0.522
+Forearm Girth   0.5321      0.1371        3.88    0.000
+Knee Girth      0.30126     0.07740       3.89    0.000
+Calf Maximum    0.40387     0.07005       5.77    0.000
+Ankle Minimum  -0.00963     0.09992      -0.10    0.923
+Wrist Minimum  -0.1180      0.1959       -0.60    0.547
+Height          0.32816     0.01560      21.03    0.000
+
+S = 2.204       R-Sq = 97.3%     R-Sq(adj) = 97.3%
+</PRE>
+</P>
+
+<P>
+Once students have determined a predictive model for weight, they can apply it to predict their own weight and see how well it works for them. (Students’ privacy with respect to measurements must be respected.) Rather than fit weight to a "large" model like 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation1">(1)</A>, which has 13 variables, they may seek smaller 
+(that is, more "parsimonious") models having the same or very nearly the same quality of fit but requiring fewer measurements. Inspection of a histogram or normal probability plot of the residuals associated with the above multiple regression equation indicates that the errors in this model may be reasonably taken to follow some normal distribution. The regression model constant variance assumption also seems to be reasonably satisfied, as plots of the residuals of 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation1">Model (1)</A> against the various predictors seem to have uniform variability. Consequently, the 
+<I>p</I>-values in the Minitab output above may be taken to be fairly accurate and can be used to begin a stepwise procedure to remove redundant predictors. In our case, as the highest 
+<I>p</I>-value corresponds to the predictor navel girth, this girth should be removed first. The reader may refer to 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23draper1998">Draper and Smith (1998)</A>, for example, for further details on stepwise procedures in multiple regression. We note that the model using height along with the seven girths with the highest 
+<I>T</I>-values gives as good a fit, in terms of the adjusted R<SUP>2</SUP> value, as the 13-variable 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation1">Model (1)</A>. It is interesting to note that including gender as a dummy variable does not appreciably improve the quality of fit.
+</P>
+
+<P>
+A simpler model for weight uses height and the sum of the above seven girths. This model has an adjusted R<SUP>2</SUP> of 97.1%. Such a model highlights the connection between changes in girths and changes in weight. A more complicated model, using height and the square of this girth sum, gives an adjusted R<SUP>2</SUP> of 97.4%.  Squaring each of the seven girths and fitting weight to a linear combination of them along with height gives an adjusted R<SUP>2</SUP> of 97.6%. Other models can also be constructed from different manipulations and combinations of the available variables 
+(such as the interaction term hip girth multiplied by chest girth), with the possibility of attaining further improvements, though at the risk of reducing conceptual clarity.
+</P>
+
+<P>
+The initial objective of the HP Study was to determine how well weight could be predicted from body build for a dataset of physically active young individuals within the normal weight range. With this in mind, weight was fitted from the nine skeletal variables and height with a resulting adjusted 
+R<SUP>2</SUP> of nearly 90%. The best regression equation for weight from these variables becomes the group’s equation for body build weight, which is based on measurements that are largely constant over the adult years and will not be affected by changes in body fat or muscle mass. Body build weight could thus serve as a benchmark for maintaining a young adult profile into old age.
+ </P>
+
+<A NAME="equation2">
+<P>
+</A>
+The model
+</P>
+
+<TABLE>
+<TR>
+<TD ALIGN=right>
+Weight (kg) = 
+</TD>
+<TD ALIGN=left>
+- 110 + 1.34 Chest Diameter + 1.54 Chest Depth
+</TD>
+<TD ALIGN=center>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(2)</TD>
+</TR>
+<TR>
+<TD></TD>
+<TD ALIGN=left>
++ 1.20 Bitrochanteric Diameter + 1.11 Wrist Girth
+</TD>
+<TD></TD>
+</TR>
+<TR>
+<TD></TD>
+<TD ALIGN=left>
++ 1.15 Ankle Girth + 0.177 Height
+</TD>
+<TD></TD>
+</TR>
+</TABLE>
+
+<P>
+for example, gives an adjusted 
+R<SUP>2</SUP> of 88.7% and a standard error of 4.5 kg with the given dataset. (Note that wrist and ankle girths, nearly unchangeable girths that are commonly used as frame size indicators, replace the wrist and ankle diameters because they are not only easier to measure but give a somewhat better weight prediction). The somewhat simpler model with height and the sum of the above five body build variables also has an adjusted R<SUP>2</SUP> of 88.7% and a standard error of 4.5 kg. Adding gender to either model does not appreciably improve the quality of fit.
+</P>
+
+<P>
+The subjects in the dataset are well-nourished, physically active young adults who in most cases have at least a normal young-adult muscle mass with body fat close to 22% for the women and 14% for the men. Consequently, students can estimate what a good weight for themselves would be by inserting their own skeletal measurements into, for example, 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation2">Equation (2)</A>. This weight would reflect a body composition similar to that of the dataset. For a somewhat leaner and less muscular body composition, female students should reduce this weight by about 5% and male students should lower it by as much as 7% to bring it more in line with that of young military personnel (see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23white1971">White and Churchill 1971</A>
+and 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23clauser1972">Clauser et al. 1972</A>). 
+</P>
+
+<P>
+An alternative approach to determining body build weight uses a two-step procedure: 
+</P>
+
+<P>
+<OL>
+<LI><P>
+Derive body build girths from regression equations that project the changeable girths from the best linear combination of skeletal variables
+</P></LI>
+<LI><P>
+Obtain body build weight by substituting these derived body build girths for the measured girths in a scale weight equation 
+(see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation1">Equation 1</A>)
+</P></LI>
+</OL>
+</P>
+
+<P>
+The accuracy of weight projections from measured girths and height for our group supports the validity of this approach. Except for the navel and thigh girth projections, students will find that the adjusted R<SUP>2</SUP> values for the body build girth projections range from 64% to 87% when using the same five skeletal variables as in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation2">(2)</A>. A special benefit of taking body build girths as the foundation of the model is the possibility of testing new skeletal measurements to improve the prediction of specific girths and incorporating these improvements in the body build equations. Subsequent research in the HP Study has demonstrated the value of a lower trunk skeletal depth measurement for hip girth and thigh girth projections and of a chest width measurement near the bottom of the rib cage for the projection of the waist girth.
+</P>
+
+<P>
+Whichever approach is used to predict body build weight from skeletal variables and height, body build weight predicts scale weight substantially more accurately than height alone for the 507-person dataset. The prediction equation for scale weight from height is
+</P>
+
+<A NAME="equation3">
+<P>
+</A>
+<TABLE>
+<TR>
+<TD ALIGN=left>
+Weight (kg)  =  -105 + 1.018 Height (cm)
+</TD>
+<TD ALIGN=center>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+(3)</TD>
+</TR>
+</TABLE>
+</P>
+
+<P>
+For this equation R<SUP>2</SUP> is 51.5% with a standard error of 9.3 kg. The scatter plot in 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure6">Figure 6</A> shows that body build weight computed from 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23equation2">(2)</A> is well correlated with scale weight, with a correlation coefficient 0.94. 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure7">Figure 7</A> shows that weight and height have a visibly smaller correlation (correlation coefficient of 0.72 
+<IMG SRC="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fimages%2Fapproximately.gif" ALT="equals approximately">
+<IMG SRC="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fimages%2Fsquareroot.gif" ALT="root(0.515)">). Different symbols identify male and female subjects in the two figures - note the concentration of women in the lower left-hand corner of both scatterplots.
+</P>
+
+<A NAME="figure6">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure6.jpg"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure6.jpg"> Figure 6</A>
+</P>
+
+<P>
+<B>Figure 6.</B> Weight vs. Body Build Weight by Gender.
+</P>
+
+<A NAME="figure7">
+<P><HR></P>
+</A>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure7.jpg"><IMG src="https://archive.wikiwix.com/cache/display2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fjohnson_figure7.jpg"> Figure 7</A>
+</P>
+
+<P>
+<B>Figure 7.</B> Weight vs. Height by Gender.
+</P>
+
+<P><HR></P>
+
+<P>
+The dataset offers some examples of where a Body Mass Index (BMI) below 20 or above 25 does not reflect underweight or overweight in terms of body build weight, thus raising questions about the value of this obesity index for individuals whose body build is smaller or larger than is typical for their height. Students can check whether anyone in the class has a body build weight from the group equation that gives a BMI (body build weight divided by height, in meters, squared) below 20 or in excess of 25.   
+</P>
+
+<P>
+A good way to assess fat status is to calculate the difference between the measured waist girth and the body build waist girth projected from the dataset, which includes the chest, biiliac, and bitrochanteric diameters as well as chest depth (this model has an adjusted 
+R<SUP>2</SUP> of 77.6%). An acceptable range between the two may be a few centimeters. Again, the body build waist girth would have to be reduced by about 5% to match girth data for young military personnel. For muscle status assessment, the forearm, chest, and calf girth can play a useful role. If the measured forearm girth, for instance, is within a centimeter of the body build forearm girth (the skeletal variables wrist girth, chest diameter and chest depth can be used, for example), students can be assured that their arms are about as muscular as those of the physically active men and women in the dataset.
+</P>
+
+<P>
+From a forensic science perspective, given a single incomplete skeleton, the determination of height is of interest as part of the process of identifying whose remains have been found. As a classroom exercise, for example, suppose the only portion of the skeleton that remains is the torso, with only the biacromial diameter, biiliac diameter, and bitrochanteric diameter available. Students could then be tasked to fit height in terms of these three measurements and give some assessment of the quality of fit 
+(see 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23gideon1997">Gideon 1997</A>). Finally, students may wish to consider how regression equations could help them take the scattered skeletal remains of several individuals strewn together and separate them by individual.
+</P>
+
+<H2>5. Getting the Data</H2>
+
+<P>
+The file 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fdatasets%2Fbody.dat">body.dat</A> is a text file containing 507 rows. Each row corresponds to a particular individual and contains 25 measurements on that individual. The file 
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fdatasets%2Fbody.txt">body.txt</A> is a brief documentation file containing a brief description of the dataset.
+</P>
+
+<H2>Appendix - Key to Variables in body.dat</H2>
+
+<P>
+<PRE>
+Columns     Variable
+
+            Skeletal Measurements:
+
+   1 -  4   Biacromial diameter (see Fig. 2) 
+   6 -  9   Biiliac diameter, or "pelvic breadth" (see Fig. 2)
+  11 - 14   Bitrochanteric diameter (see Fig. 2)
+  16 - 19   Chest depth between spine and sternum at nipple level, 
+            mid-expiration
+  21 - 24   Chest diameter at nipple level, mid-expiration
+  26 - 29   Elbow diameter, sum of two elbows
+  31 - 34   Wrist diameter, sum of two wrists
+  36 - 39   Knee diameter, sum of two knees
+  41 - 44   Ankle diameter, sum of two ankles
+
+            Girth Measurements:
+
+  46 - 50   Shoulder girth over deltoid muscles
+  52 - 56   Chest girth, nipple line in males and just above breast 
+            tissue in females, mid-expiration
+  58 - 62   Waist girth, narrowest part of torso below the rib cage, 
+            average of contracted and relaxed position
+  64 - 68   Navel (or "Abdominal") girth at umbilicus and iliac crest, 
+            iliac crest as a landmark
+  70 - 74   Hip girth at level of bitrochanteric diameter
+  76 - 79   Thigh girth below gluteal fold, average of right and left 
+            girths
+  81 - 84   Bicep girth, flexed, average of right and left girths
+  86 - 89   Forearm girth, extended, palm up, average of right and 
+            left girths
+  91 - 94   Knee girth over patella, slightly flexed position, average 
+            of right and left girths
+  96 - 99   Calf maximum girth, average of right and left girths
+ 101 -104   Ankle minimum girth, average of right and left girths
+ 106 -109   Wrist minimum girth, average of right and left girths
+
+            Other Measurements:
+
+ 111-114    Age (years)
+ 116-120    Weight (kg)
+ 122-126    Height (cm)
+ 128        Gender (1 - male, 0 - female)
+</PRE>
+</P>
+
+<P>
+The first 21 variables are all measured in centimeters (cm).
+</P>
+
+<P>
+Values are separated by blanks. There are no missing values.
+</P>
+
+<P><HR></P>
+
+<h2>Acknowledgements</h2>
+
+<P>
+<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv11n2%2Fdatasets.heinz.html%23figure2">Figure 2</A> is reprinted, by permission, from Wilmore, J. H., Frisancho, R. A.,
+Gordon, C. C., Himes, J. H., Martin, A. D., Martorell, R., and Seefeldt, V. D.,
+1991, "Body breadth equipment and measurement techniques" in 
+<I>Anthropometric Standardization Reference Manual</I>, Abridged ed., edited by T.G. Lohman, A.F. Roche, and R. Martorell (Champaign, IL: Human Kinetics), 29.
+</P>
+
+<P><HR></P>
+
+<h2>References</h2>
+
+<A NAME="behnke1974"></A>
+<P>
+Behnke, A. R., and Wilmore, J. H. (1974), 
+<I>Evaluation and Regulation of Body Build and Composition</I>, Englewood Cliffs, NJ: Prentice Hall.
+</P>
+
+<A NAME="clauser1972"></A>
+<P>
+Clauser, C., Tucker, P., McConville, J., Churchill, E., Laubach, L., and Reardon, J. (1972), 
+<I>Anthropometry of Air Force Women</I>, 
+Report Number AMRL-TR-70-5, Aerospace Medical Research Laboratory, Wright-Patterson Air Force Base, OH.
+</P>
+
+<A NAME="draper1998"></A>
+<P>
+Draper, N. R., and Smith, H. (1998), <I>Applied Regression Analysis</I> (3rd ed.), New York: John Wiley and Sons.
+</P>
+
+<A NAME="gideon1997"></A>
+<P>
+Gideon, J. (1997), <I>Teach-Stat Activities: Statistics Investigations for Grades 3-6</I>, 
+The University of North Carolina Mathematics and Science Education Network, Palo Alto, CA: 
+Dale Seymour Publications, pp. 75-78.
+</P>
+
+<A NAME="heinz2003"></A>
+<P>
+Heinz, G., and Peterson, L. J. (2003), 
+"Individualized obesity assessment by the use of integrated frame size and girth measurements," submitted for publication.
+</P>
+
+<A NAME="innes2000"></A>
+<P>
+Innes, B. (2000), 
+<I>Bodies of Evidence: The Fascinating World of Forensic Science and How it Helped Solve More Than 100 True Crimes</I>, Pleasantville, NY: Reader’s Digest Association, pp. 71-72.
+</P>
+
+<A NAME="johnson1996"></A>
+<P>
+Johnson, R. (1996), "Fitting Percentage of Body Fat to Simple Body Measurements," <I>Journal of Statistics Education</I>, 4(1).
+(<A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fv4n1%2Fdatasets.johnson.html">www.amstat.org/publications/jse/v4n1/datasets.johnson.html</A>) 
+</P>
+
+<A NAME="joyce1991"></A>
+<P>
+Joyce, C., and Stover, E. (1991), <I>Witnesses from the Grave: The Stories Bones Tell</I>, Boston, MA: Little, Brown, and Company, p. 80, pp. 177-178.
+</P>
+
+<A NAME="kroemer1997"></A>
+<P>
+Kroemer, K. H. E., Kroemer, H. J., and Kroemer-Elbert, K. E. (1997), 
+<I>Engineering Physiology: Bases of Human Factors/Ergonomics</I> (3rd ed.), New York: Van Nostrand Reinhold.
+</P>
+
+<A NAME="lohman1988"></A>
+<P>
+Lohman, T., Roche, A., and Martorell, R., (eds.) (1988), <I>Anthropometric Standardization Reference Manual</I>, 
+Champaign, IL: Human Kinetics Books.
+</P>
+
+<A NAME="nasa1978"></A>
+<P>
+National Aeronautics and Space Administration (1978), 
+<I>Anthropometric Source Book Volume 2: A Handbook of Anthropometric Data</I>, NASA Reference Publication 1024, Yellow Springs, OH.
+</P>
+
+<A NAME="nickell1999"></A>
+<P>
+Nickell, J., and Fischer, J. F. (1999), <I>Crime Scene: Methods of Forensic Detection</I>, Lexington, KY: The University Press of Kentucky.
+</P>
+
+<A NAME="owen2000"></A>
+<P>
+Owen, D. (2000), <I>Hidden Evidence: Forty True Crimes and How Forensic Science Helped Solve Them</I>, Buffalo, NY: Firefly Books, p. 48.
+</P>
+
+<A NAME="pheasant1996"></A>
+<P>
+Pheasant, S. (1996), <I>Bodyspace: Anthropometry, Ergonomics, and the Design of Work</I> (2nd ed.), Bristol, PA: Taylor and Francis.
+</P>
+
+<A NAME="roebuck1995"></A>
+<P>
+Roebuck, J. A. (1995), <I>Anthropometric Methods: Designing to Fit the Human Body</I>, Santa Monica, CA: Human Factors and Ergonometrics Society.
+</P>
+
+<A NAME="seber1984"></A>
+<P>
+Seber, G. A. F. (1984), <I>Multivariate Observations</I>, New York: John Wiley and Sons.
+</P>
+
+<A NAME="white1971"></A>
+<P>
+White, R. M., and Churchill, E. (1971), "The Body Size of Soldiers: U.S. Army Anthropometry - 1966," Report Number 72-51-CE (CPLSEL-94), U.S. Army Natick Laboratories, Natick, MA.
+</P>
+
+<A NAME="wingate1992"></A>
+<P>
+Wingate, A. (1992), <I>Scene of the Crime: A Writer’s Guide to Crime-Scene Investigations</I>, Cincinnati, OH: Writer’s Digest Books, p. 148.
+</P>
+
+<P><HR></P>
+
+<P>
+Grete Heinz
+<BR>24710 Upper Trail
+<BR>Carmel, California  93923
+<BR>USA
+<BR><a href="https://archive.wikiwix.com/cache/index2.php?url=mailto%3Agoguh%40aol.com"><I>goguh@aol.com</I></a>
+</P>
+
+<P>
+Louis J. Peterson
+<BR>Department of Health Sciences
+<BR>San José State University
+<BR>One Washington Square
+<BR>San José, California 95192
+<BR>USA
+</P>
+
+<P>
+Roger W. Johnson
+<BR>Department of Mathematics and Computer Science
+<BR>South Dakota School of Mines and Technology
+<BR>501 East St. Joseph Street
+<BR>Rapid City, South Dakota  57701
+<BR>USA
+<BR><a href="https://archive.wikiwix.com/cache/index2.php?url=mailto%3ARoger.Johnson%40sdsmt.edu"><I>Roger.Johnson@sdsmt.edu</I></a>
+</P>
+
+<P>
+Carter J. Kerk
+<BR>Industrial Engineering Program
+<BR>South Dakota School of Mines and Technology
+<BR>501 East St. Joseph Street
+<BR>Rapid City, South Dakota 57701
+<BR>USA 
+<BR><a href="https://archive.wikiwix.com/cache/index2.php?url=mailto%3ACarter.Kerk%40sdsmt.edu"><I>Carter.Kerk@sdsmt.edu</I></a>
+</p>
+
+<P><HR></P>
+
+<SMALL>
+<FONT FACE="Arial" COLOR="#000000"> 
+<P ALIGN="CENTER">
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fcontents_2003.html"><FONT COLOR="green">Volume 11 (2003)</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_archive.html"><FONT COLOR="green">Archive</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_index.html"><FONT COLOR="green">Index</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_data_archive.html"><FONT COLOR="green">Data Archive</FONT></A> |
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_info_service.html"><FONT COLOR="green">Information Service</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_board.html"><FONT COLOR="green">Editorial Board</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_author_info.html"><FONT COLOR="green">Guidelines for Authors</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2Fjse%2Fjse_data_contributor_info.html"><FONT COLOR="green">Guidelines for Data Contributors</FONT></A> | 
+ <A HREF=."/"><FONT COLOR="green">Home Page</FONT></A> |
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=mailto%3Ajournals%40amstat.org"><FONT COLOR="green">Contact JSE</FONT></A> | 
+ <A HREF="https://archive.wikiwix.com/cache/index2.php?url=http%3A%2F%2Fwww.amstat.org%2Fpublications%2F"><FONT COLOR="green">ASA Publications</FONT></A>
+</P>
+</FONT>
+</SMALL>
+
+</body>
+</html>
+
+
