@@ -1,11 +1,9 @@
-# Data
-contain all the csv for the exercices in folder notebooks
-
-# Notebooks
-contain all exercice and correction
-
-# Papers
-contain all scientific papers about data science and cognitive modeling
-
-# Endproject
-contain the codes used to pass the class
+# PSL Week : Cognitive data mining and modelling
+## Data
+- CSV for the exercices in the notebooks and Endproject folders
+## Notebooks
+- Contain all exercices and corrections
+## Papers
+- Contain papers about data science and cognitive modelling.
+## Endproject
+- Contain the notebooks used to pass the class.
